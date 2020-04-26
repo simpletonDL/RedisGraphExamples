@@ -1,0 +1,2 @@
+redisgraph>=2.0
+redis>=3.3.10
