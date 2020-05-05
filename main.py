@@ -14,8 +14,20 @@ EDGE_STAT = """
 match ()-[r]-() return type(r), count(*)
 """
 
-RDF_QUERY_1 = """
+RDF_QUERY_1_v1 = """
 PATH PATTERN s = ()-/ [<:SCO ~s :SCO] | [<:T ~s :T] | [<:SCO :SCO] | [<:T :T] /-()
+MATCH (v)-/ ~s /->(to)
+RETURN COUNT(*)
+"""
+
+RDF_QUERY_1_v2 = """
+PATH PATTERN s = ()-/ [<:SCO [~s | ()] :SCO] | [<:T [~s | ()] :T] /-()
+MATCH (v)-/ ~s /->(to)
+RETURN COUNT(*)
+"""
+
+RDF_QUERY_2 = """
+PATH PATTERN s = ()-/ [:SCO | :T]* /-()
 MATCH (v)-/ ~s /->(to)
 RETURN COUNT(*)
 """
@@ -36,5 +48,5 @@ RETURN COUNT(*)
 r = Redis()
 graph = Graph(GRAPH, r)
 
-res = graph.query(RDF_QUERY_1)
+res = graph.query(RDF_QUERY_2)
 res.pretty_print()
